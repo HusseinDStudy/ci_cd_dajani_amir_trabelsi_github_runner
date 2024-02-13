@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  web:
+    image: webdevops/php-nginx:latest # Utilise une image combinée PHP+Nginx
+    ports:
+      - "80:80" # Expose le port 80
+    volumes:
+      - ./index.php:/app/index.php # chemin vers vos fichiers PHP
+    environment:
+      - WEB_DOCUMENT_ROOT=/app # Définit le répertoire racine du serveur web
+    networks:
+      - pma_net
+ # Définit le service MariaDB
+  mariadb:
+    image: mariadb:latest  # Image Docker MariaDB
+    networks:  # Réseaux utilisés
+      - pma_net
+    environment:  # Variables d'environnement
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=yes  # Mot de passe vide autorisé
+      - MARIADB_DATABASE=td_docker_runner_bdd # Nom de votre base de données
+    volumes:  # Volumes pour persistance des données
+      - ./mariadb:/var/lib/mysql
+      - ./InitDB.sql:/docker-entrypoint-initdb.d/InitDB.sql # Charge InitDB.sql au démarrage
+  # Définit le service phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest  # Image Docker phpMyAdmin
+    networks:  # Réseaux utilisés
+      - pma_net
+    environment:  # Variables d'environnement
+      - PMA_HOST=mariadb  # Hôtes MySQL et MariaDB
+    ports:  # Ports exposés
+      - "8080:80"  # Port 8080 externe, 80 interne
+networks:
+  pma_net:
