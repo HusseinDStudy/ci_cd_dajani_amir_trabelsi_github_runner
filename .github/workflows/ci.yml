@@ -15,5 +15,8 @@ jobs:
     - name: Start Docker Compose
       run: docker-compose up -d
       
+    - name: Test website
+      run: docker exex -i phpmyadmin sh curl localhost:8080
+      
     - name: Stop Docker Compose
       run: docker-compose down
