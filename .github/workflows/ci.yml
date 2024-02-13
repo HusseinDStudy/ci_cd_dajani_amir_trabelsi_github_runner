@@ -16,7 +16,7 @@ jobs:
       run: docker-compose up -d
 
     - name: Test Web Page
-      run: curl http://localhost:80
+      run: curl http://localhost:8080
 
     - name: Stop Docker Compose
       run: docker-compose down
